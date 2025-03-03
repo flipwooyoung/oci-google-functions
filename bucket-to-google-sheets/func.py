@@ -14,13 +14,16 @@ from fdk import response
 
 import oci.object_storage
 # Modify this to whatever scope you require from google API. The current configuration allows read/write access for Google Drive/Docs
-SCOPES = ["https://www.googleapis.com/auth/documents"]
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 #Change this to your bucket name
-BUCKET_NAME = "test_bucket"
+BUCKET_NAME = "your_bucket_name"
 
-# The ID of your document. Go to the git repo to see how to get your document ID.
-DOCUMENT_ID = "insert-your-document-id"
+# The ID of your sheet. Go to the git repo to see how to get your document ID. Only change the SAMPLE_RANGE_NAME if you want to change the column affected.
+SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
+
+#Only change the SAMPLE_RANGE_NAME if you want to change the column affected. Make sure to put {sheet_name}!A1 without the {}, iF your sheet name isn't Sheet1
+SAMPLE_RANGE_NAME = "Sheet1!A1"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
@@ -61,49 +64,19 @@ def get_object(bucketName, objectName):
         credentials_info = json.load(open("service_account.json"))
         credentials = service_account.Credentials.from_service_account_info(credentials_info)
         scoped_credentials = credentials.with_scopes(SCOPES)
-        docs_service = build('docs', 'v1', credentials=scoped_credentials)
+        service = build('sheets', 'v4', credentials=scoped_credentials)
 
+        #Temp append
+        values_to_append = [[message]]
         # Retrieve the documents contents from the Docs service.
-        body_dict = {}
-        document = docs_service.documents().get(documentId=DOCUMENT_ID).execute()
-        print(f"The title of the document is: {document.get('title')}")
-        body_dict = document.get('body')
-        content_list = body_dict.get('content')[-1]
-        end_index = content_list.get('endIndex')
+        body = {
+        'values': values_to_append
+        }   
+    # Call the Sheets API
+        sheet = service.spreadsheets().values().append(
+        spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME,
+        valueInputOption='USER_ENTERED', body=body).execute()
 
-        delete_requestBody = {
-            "requests":[
-                { 
-                    "deleteContentRange": {
-                        "range": {
-                        "startIndex": 1,
-                        "endIndex": end_index - 1,
-                        }
-                    },
-                },
-            ],
-        }
-
-        insert_requestBody = {
-            "requests":[
-                { 
-                    "insertText": {
-                        "text": message,
-                        "location": {
-                        "index": 1
-                        }
-                    },
-                },
-            ],
-        }
-			
-		
-        if end_index == 2: #Insert 
-            docs_service.documents().batchUpdate(documentId=DOCUMENT_ID,body=insert_requestBody).execute()
-        else: #Delete everything in the doc before inserting
-            docs_service.documents().batchUpdate(documentId=DOCUMENT_ID,body=delete_requestBody).execute()
-            docs_service.documents().batchUpdate(documentId=DOCUMENT_ID,body=insert_requestBody).execute()
-		
     except Exception as e:
         return {"error": str(e)}
     #Code to return message
