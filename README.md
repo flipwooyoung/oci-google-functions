@@ -46,3 +46,5 @@ https://docs.oracle.com/en-us/iaas/tools/python/2.145.0/api/object_storage/clien
 -Google Cloud Platform Cloud Console
 https://console.cloud.google.com
 
+-Google API Documentation
+https://googleapis.github.io/google-api-python-client/docs/dyn/docs_v1.documents.html#get
