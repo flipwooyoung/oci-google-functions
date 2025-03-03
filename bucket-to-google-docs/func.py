@@ -57,15 +57,8 @@ def get_object(bucketName, objectName):
     
     # Google upload code
     try:
-        # Load the service account key from OCI Object Storage
-        signer = oci.auth.signers.get_resource_principals_signer()
-        object_storage = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
-        namespace = object_storage.get_namespace().data
-        bucket_name = BUCKET_NAME #Replace with your bucket name
-        object_name = "service_account.json" #replace with your credentials file name
-        object_response = object_storage.get_object(namespace, bucket_name, object_name)
-        credentials_info = json.loads(object_response.data.content)
-
+        # Load the service account key from the service_account.json
+        credentials_info = json.load(open("service_account.json"))
         credentials = service_account.Credentials.from_service_account_info(credentials_info)
         scoped_credentials = credentials.with_scopes(SCOPES)
         docs_service = build('docs', 'v1', credentials=scoped_credentials)
