@@ -22,6 +22,9 @@ BUCKET_NAME = "your_bucket_name"
 # The ID of your document. Go to the git repo to see how to get your document ID.
 DOCUMENT_ID = "insert-your-document-id"
 
+#By default you don't need to change this unless you changed the service_account.json location. Change this if you have.
+SERVICE_ACCOUNT_PATH = "../service_account.json"
+
 def handler(ctx, data: io.BytesIO=None):
     try:
         body = {"bucketName": BUCKET_NAME}
@@ -58,7 +61,7 @@ def get_object(bucketName, objectName):
     # Google upload code
     try:
         # Load the service account key from the service_account.json
-        credentials_info = json.load(open("service_account.json"))
+        credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
         credentials = service_account.Credentials.from_service_account_info(credentials_info)
         scoped_credentials = credentials.with_scopes(SCOPES)
         docs_service = build('docs', 'v1', credentials=scoped_credentials)
