@@ -36,7 +36,7 @@ https://www.googleapis.com/auth/spreadsheets
 
 
 ## Guide to set-up environment for this Function on OCI:
-## Note: You can skip to step
+## Note: You can skip to step 9 if you have already done the prior steps for a different function.
 
 1. Create a compartment to hold all the resources that we will create in this guide.
 
@@ -81,17 +81,17 @@ cd oci-google-functions/bucket-to-google-sheets
 
 11. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/bucket-to-google-sheets/func.py. This python file contains all the code for this function. First, set up the SAMPLE_SPREADSHEET_ID. Go to line 23, and change this to the sheet ID of your Google sheet that you want to set as the target.
 
-<img width="551" alt="image" src="https://github.com/user-attachments/assets/43aa9423-9ec0-46d7-b0d9-e5084ef56688" />
+<img width="664" alt="image" src="https://github.com/user-attachments/assets/e8249e5e-0477-4cad-bc03-b64c764e6383" />
 
 Go to your Google Sheet link. This is your sheet ID.
 
-<img width="605" alt="image" src="https://github.com/user-attachments/assets/51ce5d98-12a4-4355-bf14-eef2538342c5" />
+<img width="525" alt="image" src="https://github.com/user-attachments/assets/416876ba-f695-49bd-90c3-0989cc1cc971" />
 
 12. Make sure to set the bucket name at line 20. Change the string value to the name of your bucket.
 
 13. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. There is a service_account.json in the repo that you should have cloned too. Fill in all the json values with the ones in your service account .json
 
-14. Now you need to set up the function. cd to the directory of the function. 
+14. Now you need to set up the function. cd to the directory of the function, if you still haven't. 
 ```
 cd oci-google-functions/bucket-to-google-sheets
 ```
