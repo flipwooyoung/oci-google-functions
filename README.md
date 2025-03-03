@@ -1,4 +1,3 @@
-<img width="959" alt="image" src="https://github.com/user-attachments/assets/dffdabc3-cfd8-4f1d-8ef5-50ec322b2fbb" /># oci-google-functions
 This repository contains materials to transfer objects from OCI Object Storage to Google Workspace tools (e.g. Google Docs).
 
 You will require a Google Account to utilize Google API, and a Service Account to use the code on this repository.
