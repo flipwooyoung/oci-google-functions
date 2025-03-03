@@ -15,6 +15,9 @@ To summarise, you will be setting up:
 If you haven't created a GCP Service Account key, go to:
 https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
+IMPORTANT STEP:
+Go to your Google Doc, and share it to the email of the Service Account you created. This won't work otherwise.
+
 Guide to utilize this Function:
 
 1. Create a compartment to hold all the resources that we will create in this guide.
@@ -63,7 +66,7 @@ Go to your Google Doc link. This is your document ID.
 
 14. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this: fn -v deploy --app {name_of_application}
 
-15. Now that you have set it up, use this command to invoke the function for testing: fn invoke {application_name} bucket-to-google-docs
+15. Now that you have set it up, use this command to invoke the function for testing: fn invoke {application_name} oci-google-functions
 
 16. This function should display the text of the latest object you uploaded. If successful, move on to 17, if not, try rerunning the function invoke cmd again.
 
@@ -75,5 +78,5 @@ Go to your Google Doc link. This is your document ID.
 
 <img width="803" alt="image" src="https://github.com/user-attachments/assets/9deff2cf-02c7-4a67-bc6d-7f2c865536b1" />
 
-19. Congrats. You set up everything
+19. Congrats. You set up everything. Test it out by uploading an object to the bucket.
 
