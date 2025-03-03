@@ -36,7 +36,7 @@ https://www.googleapis.com/auth/spreadsheets
 
 
 ## Guide to set-up environment for this Function on OCI:
-## Note: You can skip to step 9 if you have already done the prior steps for a different function.
+## Note: You can skip to step 9 if you have already done steps 1-8 for a different function.
 
 1. Create a compartment to hold all the resources that we will create in this guide.
 
