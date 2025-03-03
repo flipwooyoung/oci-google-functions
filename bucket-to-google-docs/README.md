@@ -7,6 +7,8 @@ To summarise, you will be setting up:
 4. OCI Functions to allow us to run an application that will utilize Google API to update the Google Doc.
 5. OCI Events to track the changes to the bucket and trigger the Function whenever it happens.
 
+If you haven't created a GCP Service Account key, go to:
+https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
 References:
 
