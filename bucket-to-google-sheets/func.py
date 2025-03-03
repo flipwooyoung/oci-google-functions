@@ -13,7 +13,8 @@ import sys
 from fdk import response
 
 import oci.object_storage
-# Modify this to whatever scope you require from google API. The current configuration allows read/write access for Google Drive/Docs
+
+# Modify this to whatever scope you require from google API. The current configuration allows read/write access for Google SHEETS
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 #Change this to your bucket name
@@ -24,6 +25,9 @@ SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
 
 #Only change the SAMPLE_RANGE_NAME if you want to change the column affected. Make sure to put {sheet_name}!A1 without the {}, iF your sheet name isn't Sheet1
 SAMPLE_RANGE_NAME = "Sheet1!A1"
+
+#By default you don't need to change this unless you changed the service_account.json location. Change this if you have.
+SERVICE_ACCOUNT_PATH = "../service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
@@ -42,7 +46,7 @@ def handler(ctx, data: io.BytesIO=None):
         headers={"Content-Type": "application/json"}
     )
 
-def get_object(bucketName, objectName):
+def get_object(bucketName, objectName): # This Function gets the contents of the object you specify, and creates message with the content.
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
@@ -58,17 +62,18 @@ def get_object(bucketName, objectName):
     except Exception as e:
         message = "Failed: " + str(e.message)
     
-    # Google upload code
+    # Google upload code to Google Sheets, using the message variable gained.
     try:
         # Load the service account key from the service_account.json
-        credentials_info = json.load(open("service_account.json"))
+        credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
         credentials = service_account.Credentials.from_service_account_info(credentials_info)
         scoped_credentials = credentials.with_scopes(SCOPES)
         service = build('sheets', 'v4', credentials=scoped_credentials)
 
-        #Temp append
+        #Put the message extracted from object storage to a list
         values_to_append = [[message]]
-        # Retrieve the documents contents from the Docs service.
+        
+        # Set up the body to append with created list
         body = {
         'values': values_to_append
         }   
@@ -83,7 +88,7 @@ def get_object(bucketName, objectName):
     return message
     
 
-def list_objects(bucketName):
+def list_objects(bucketName):  # This function extracts the name of the latest object you uploaded in object storage.
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
@@ -101,5 +106,6 @@ def list_objects(bucketName):
             found_object = item
 
     #When creating a response, make sure to convert whatever you have to string, otherwise it will fail.
+    #This response extracts the name of the latest object you uploaded in object storage.
     response = str(found_object.name)
     return response
