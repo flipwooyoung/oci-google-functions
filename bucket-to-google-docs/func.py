@@ -1,10 +1,3 @@
-#
-# oci-objectstorage-get-object version 1.0.
-#
-# Copyright (c) 2020 Oracle, Inc.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
-#
-
 import os.path
 
 import google.oauth2.credentials
@@ -20,15 +13,18 @@ import sys
 from fdk import response
 
 import oci.object_storage
-# If modifying these scopes, delete the file token.json.
+# Modify this to whatever scope you require from google API. The current configuration allows read/write access for Google Drive/Docs
 SCOPES = ["https://www.googleapis.com/auth/documents"]
 
-# The ID of a sample document.
-DOCUMENT_ID = "1KSTW36o6vrPSBtsLzU1cOThNtN6-Tex2Z-p-yjnTF7U"
+#Change this to your bucket name
+BUCKET_NAME = "your_bucket_name"
+
+# The ID of your document. Go to the git repo to see how to get your document ID.
+DOCUMENT_ID = "insert-your-document-id"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
-        body = {"bucketName": "test_bucket"}
+        body = {"bucketName": BUCKET_NAME}
         bucketName = body["bucketName"]
     except Exception:
         raise Exception('Input a JSON object in the format: \'{"bucketName": "<bucket name>"}\' ')
@@ -65,7 +61,7 @@ def get_object(bucketName, objectName):
         signer = oci.auth.signers.get_resource_principals_signer()
         object_storage = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
         namespace = object_storage.get_namespace().data
-        bucket_name = "test_bucket" #Replace with your bucket name
+        bucket_name = BUCKET_NAME #Replace with your bucket name
         object_name = "service_account.json" #replace with your credentials file name
         object_response = object_storage.get_object(namespace, bucket_name, object_name)
         credentials_info = json.loads(object_response.data.content)
@@ -108,11 +104,10 @@ def get_object(bucketName, objectName):
             ],
         }
 			
-		#Delete everything in the doc
-
-        if end_index == 2:
+		
+        if end_index == 2: #Insert 
             docs_service.documents().batchUpdate(documentId=DOCUMENT_ID,body=insert_requestBody).execute()
-        else:
+        else: #Delete everything in the doc before inserting
             docs_service.documents().batchUpdate(documentId=DOCUMENT_ID,body=delete_requestBody).execute()
             docs_service.documents().batchUpdate(documentId=DOCUMENT_ID,body=insert_requestBody).execute()
 		
@@ -120,7 +115,6 @@ def get_object(bucketName, objectName):
         return {"error": str(e)}
     #Code to return message
     return message
-    #return { "content": message }
     
 
 def list_objects(bucketName):
@@ -130,11 +124,9 @@ def list_objects(bucketName):
     print("Searching for objects in bucket " + bucketName, file=sys.stderr)
     object = client.list_objects(namespace, bucketName, fields = "timeModified")
     print("found objects", flush=True)
-    #object_names = [b.name for b in object.data.objects]
 
     #This works for some reason
     latest_modification_date = max(([b.time_modified for b in object.data.objects]))
-    #latest_object = str(max(object.data.objects, key=lambda x:x['time_modified']))
     found_object = None
 
     #This also works for some reason. Don't use item[time_modified], it doesn't work.
@@ -143,9 +135,5 @@ def list_objects(bucketName):
             found_object = item
 
     #When creating a response, make sure to convert whatever you have to string, otherwise it will fail.
-    #response = { "Objects found in bucket '" + bucketName + "'": object_names }
-    #response = { "Objects found in bucket " + bucketName: str(item)}
     response = str(found_object.name)
-    #response = str(object.data.objects)
-    #response = str(found_object)
     return response
