@@ -11,16 +11,31 @@ To summarise, you will be setting up:
 4. OCI Dynamic Groups to identify the Functions
 5. OCI Policies to allow the Function to interact with the bucket
 6. OCI VCN for the function. (You can use VCNs in another compartment if you want to, instead of creating a new VCN.)
-7. OCI Functions to allow us to run an application that will utilize Google API to update the Google Doc.
-8. OCI Events to track the changes to the bucket and trigger the Function whenever it happens.
+7. OCI Applications to hold the required Functions.
+8. OCI Functions to allow us to run an application that will utilize Google API.
+9. OCI Events to track the changes to the bucket and trigger the Function whenever it happens.
 
-If you haven't created a GCP Service Account key, go to:
+## IMPORTANT STEPS for GCP Set-up:
+1. If you haven't created a GCP Service Account key, go to:
 https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
-IMPORTANT STEP:
-Go to your Google Doc, and share it to the email of the Service Account you created. This won't work otherwise. Also, enable Google Doc API here: https://console.cloud.google.com/apis/api/docs.googleapis.com
+2. Go to your Google Doc, and share it to the email of the Service Account you created. This won't work otherwise.
 
-Guide to utilize this Function:
+3. Enable Google Doc API here: https://console.cloud.google.com/apis/api/docs.googleapis.com
+
+4. You also need to set the required scopes to use Google Docs API. Go to https://console.cloud.google.com/auth/scopes, and click on Add or Remove Scopes.
+
+<img width="557" alt="image" src="https://github.com/user-attachments/assets/b8ed5f25-cbeb-4adb-bf21-37717bc85aec" />
+
+5. Scroll down to Manually add scopes, and paste the below links, before adding to table. Click on Update once you are done, and you finished the set-up.
+```
+https://www.googleapis.com/auth/drive
+https://www.googleapis.com/auth/documents
+```
+<img width="482" alt="image" src="https://github.com/user-attachments/assets/f0b9f04c-5752-4625-9398-a81731eb9c75" />
+
+
+## Guide to utilize this Function on OCI:
 
 1. Create a compartment to hold all the resources that we will create in this guide.
 
@@ -77,7 +92,7 @@ Go to your Google Doc link. This is your document ID.
 
 14. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this:
 ```
-fn -v deploy --app {name_of_application}
+fn -v deploy --app {application_name}
 ```
 
 15. Now that you have set it up, use this command to invoke the function for testing:
