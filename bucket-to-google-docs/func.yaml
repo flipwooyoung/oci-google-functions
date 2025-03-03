@@ -1,5 +1,5 @@
 schema_version: 20180708
-name: bucket_function
+name: bucket-to-google-docs
 version: 0.0.92
 runtime: python
 build_image: fnproject/python:3.11-dev
