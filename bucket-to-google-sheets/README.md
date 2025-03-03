@@ -112,9 +112,9 @@ fn invoke {application_name} bucket-to-google-docs
 
 <img width="554" alt="image" src="https://github.com/user-attachments/assets/fc5874d6-83ee-4666-b3d4-3b9a72b44295" />
 
-19. Set the Action as so (Function should be bucket-to-google-sheets):
+19. Set the Action to where your function compartment is (Function should be bucket-to-google-sheets):
 
-<img width="803" alt="image" src="https://github.com/user-attachments/assets/9deff2cf-02c7-4a67-bc6d-7f2c865536b1" />
+<img width="790" alt="image" src="https://github.com/user-attachments/assets/dbc6cdfa-fb06-446e-a33c-8c6143cb054e" />
 
-19. Congrats. You set up everything. Test it out by uploading an object to the bucket.
+20. Congratulations. You set up everything. Test it out by uploading an object to the bucket.
 
