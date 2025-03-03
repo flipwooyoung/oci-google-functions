@@ -66,7 +66,7 @@ Go to your Google Doc link. This is your document ID.
 
 14. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this: fn -v deploy --app {name_of_application}
 
-15. Now that you have set it up, use this command to invoke the function for testing: fn invoke {application_name} oci-google-functions
+15. Now that you have set it up, use this command to invoke the function for testing: fn invoke {application_name} bucket-to-google-docs
 
 16. This function should display the text of the latest object you uploaded. If successful, move on to 17, if not, try rerunning the function invoke cmd again.
 
@@ -74,7 +74,7 @@ Go to your Google Doc link. This is your document ID.
 
 <img width="554" alt="image" src="https://github.com/user-attachments/assets/fc5874d6-83ee-4666-b3d4-3b9a72b44295" />
 
-18. Set the Action as so (Function should be oci-google-functions):
+18. Set the Action as so (Function should be bucket-to-google-docs):
 
 <img width="803" alt="image" src="https://github.com/user-attachments/assets/9deff2cf-02c7-4a67-bc6d-7f2c865536b1" />
 
