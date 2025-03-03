@@ -41,9 +41,11 @@ Guide to utilize this Function:
 
 <img width="712" alt="image" src="https://github.com/user-attachments/assets/c5ab41e9-ed89-4381-aab8-183acfaac8ca" />
 
-8. Run this command, to create boilerplate Python code for the Function. fn init --runtime python {name_your_function)
+8. Run this command, to create boilerplate Python code for the Function: fn init --runtime python {name_your_function_directory)
 
+9. Run this command to go to your function directory: cd {your_function_directory)
 
+10. Run this command, to make the directory into a local git repo: git init
 
 References:
 
