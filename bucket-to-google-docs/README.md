@@ -16,7 +16,7 @@ If you haven't created a GCP Service Account key, go to:
 https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
 IMPORTANT STEP:
-Go to your Google Doc, and share it to the email of the Service Account you created. This won't work otherwise. Also, enable 
+Go to your Google Doc, and share it to the email of the Service Account you created. This won't work otherwise. Also, enable Google Doc API here: https://console.cloud.google.com/apis/api/docs.googleapis.com
 
 Guide to utilize this Function:
 
