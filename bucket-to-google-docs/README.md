@@ -48,7 +48,7 @@ Guide to utilize this Function:
 
 9. Go to this directory: cd oci-google-functions/bucket-to-google-docs
 
-10. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, service_account.json and requirements.txt
+10. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
 
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/ccc888ed-9619-4765-87a6-9e3e43ecbcb1" />
 
