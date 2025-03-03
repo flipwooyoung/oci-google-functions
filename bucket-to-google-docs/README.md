@@ -41,11 +41,28 @@ Guide to utilize this Function:
 
 <img width="712" alt="image" src="https://github.com/user-attachments/assets/c5ab41e9-ed89-4381-aab8-183acfaac8ca" />
 
-8. Run this command, to create boilerplate Python code for the Function: fn init --runtime python {name_your_function_directory)
+8. Run this command, to clone this github repo: git clone https://github.com/flipwooyoung/oci-google-functions
 
-9. Run this command to go to your function directory: cd {your_function_directory)
+9. Go to this directory: cd oci-google-functions/bucket-to-google-docs
 
-10. Run this command, to make the directory into a local git repo: git init
+10. To confirm, you should have cloned 3 necessary files, the func.py, func.yaml, and requirements.txt
+
+<img width="240" alt="image" src="https://github.com/user-attachments/assets/ccc888ed-9619-4765-87a6-9e3e43ecbcb1" />
+
+11. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/bucket-to-google-docs/func.py. This python file contains all the code for this function. First, set up the document ID. Go to line 20, and change this to the document ID of your Google Doc that you want to set as the target.
+
+<img width="551" alt="image" src="https://github.com/user-attachments/assets/43aa9423-9ec0-46d7-b0d9-e5084ef56688" />
+
+Go to your Google Doc link. This is your document ID.
+
+<img width="605" alt="image" src="https://github.com/user-attachments/assets/51ce5d98-12a4-4355-bf14-eef2538342c5" />
+
+12. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. 
+
+11. Now you need to set up the function. Follow the command in Step 10 of the Getting Started page. It should be similar to this: fn -v deploy --app {name_of_application}
+
+12. Now that you have set it up,
+
 
 References:
 
