@@ -28,11 +28,17 @@ Guide to utilize this Function:
 
 <img width="178" alt="image" src="https://github.com/user-attachments/assets/a77ac413-adab-45a0-aec3-b6f734a9a025" />
 
-3. Now go to Identity Domain, and create a Dynamic Group to group the Function. This is the rule you have to input to group all Functions in a specified compartment: All {resource.type = 'fnfunc', resource.compartment.id = 'ocid1.compartment.oc1..aaa'}
+3. Now go to Identity Domain, and create a Dynamic Group to group the Function. This is the rule you have to input to group all Functions in a specified compartment:
+```
+All {resource.type = 'fnfunc', resource.compartment.id = 'ocid1.compartment.oc1..aaa'}
+```
 
 <img width="665" alt="image" src="https://github.com/user-attachments/assets/9018d5d9-650b-4895-9a26-c67806562c24" />
 
-4. Now you need to create policies to enable this Dynamic Group to interact with Object Storage Buckets. This is the policy you have to input: Allow dynamic-group {function_dynamic_group_name} to read objects in compartment {function_compartment_name}
+4. Now you need to create policies to enable this Dynamic Group to interact with Object Storage Buckets. This is the policy you have to input:
+```
+Allow dynamic-group {function_dynamic_group_name} to read objects in compartment {function_compartment_name}
+```
 
 <img width="706" alt="image" src="https://github.com/user-attachments/assets/7bee6bda-b0ef-4cea-8867-d81690a0f4cc" />
 
@@ -48,7 +54,10 @@ Guide to utilize this Function:
 
 8. Run this command, to clone this github repo: git clone https://github.com/flipwooyoung/oci-google-functions
 
-9. Go to this directory: cd oci-google-functions/bucket-to-google-docs
+9. Go to this directory:
+```
+cd oci-google-functions/bucket-to-google-docs
+```
 
 10. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
 
@@ -66,9 +75,15 @@ Go to your Google Doc link. This is your document ID.
 
 13. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. There is a service_account.json in the repo that you should have cloned too. Fill in all the json values with the ones in your service account .json
 
-14. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this: fn -v deploy --app {name_of_application}
+14. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this:
+```
+fn -v deploy --app {name_of_application}
+```
 
-15. Now that you have set it up, use this command to invoke the function for testing: fn invoke {application_name} bucket-to-google-docs
+15. Now that you have set it up, use this command to invoke the function for testing:
+```
+fn invoke {application_name} bucket-to-google-docs
+```
 
 16. This function should display the text of the latest object you uploaded. If successful, move on to 17, if not, try rerunning the function invoke cmd again.
 
