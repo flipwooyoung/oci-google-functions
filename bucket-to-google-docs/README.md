@@ -36,6 +36,7 @@ https://www.googleapis.com/auth/documents
 
 
 ## Guide to utilize this Function on OCI:
+## You can skip to step 9 if you have already done step 1-8.
 
 1. Create a compartment to hold all the resources that we will create in this guide.
 
