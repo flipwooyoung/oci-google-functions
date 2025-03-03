@@ -1,0 +1,7 @@
+fdk
+oci>=2.2.18
+google-auth 
+google-auth-oauthlib 
+google-api-python-client 
+google-auth-httplib2
+google-api-core
