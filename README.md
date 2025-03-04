@@ -2,7 +2,7 @@ This repository contains materials to transfer objects from OCI Object Storage t
 
 You will require a Google Account to utilize Google API, and a Service Account to use the code on this repository.
 
-How to get Service Account from GCP Cloud Console:
+## How to get Service Account from GCP Cloud Console:
 
 1. Go to GCP (https://console.cloud.google.com).
 2. Create a Project if you don't have one. The project used doesn't matter, but for the sake of safety, you should create a project for each application you create.
@@ -37,6 +37,12 @@ How to get Service Account from GCP Cloud Console:
 
 10. Congrats! You created your Service Account and a key to access it. As long as you have given sufficient permissions to the Service Account, you can do everything in this Repository with the key.
 
+## OCI Policy Set-up for Function
+
+```
+hi
+hello
+```
 
 Resources referenced:
 
