@@ -32,9 +32,13 @@ You will require a Google Account to utilize Google API, and a Service Account t
 
 <img width="428" alt="image" src="https://github.com/user-attachments/assets/8df77468-c653-4113-b788-9f1443c65d54" />
 
-6. For the second part, you will have to create an Application. Go to https://console.cloud.google.com/auth/branding, and create an app there. The variables do not matter, so set them as you like.
+6. For the second part, you will have to create an Application. Go to[ https://console.cloud.google.com/auth/branding](https://console.cloud.google.com/auth/overview), and create an app there. The creation settings do not really matter, except make sure to set your app as external, so just configure as you please.
 
-7. For the final part, you will have to set up permissions for this Service Account. Give Editor to the Service Account for the strongest privilege, but if you only require Workspace permissions, just search Workspace and select between Workspace Developer and Reader. Continue with creation.
+<img width="361" alt="image" src="https://github.com/user-attachments/assets/ca3f8230-af54-434f-80a7-9bf547c50517" />
+
+<img width="416" alt="image" src="https://github.com/user-attachments/assets/86d64927-270c-4f3c-8001-4f462d5a85ed" />
+
+7. For the final part, you will have to set up permissions for this Service Account. Give Editor to the Service Account for the strongest privilege, but if you only require Workspace permissions, just search Workspace and select between Workspace Developer and Reader. The third part doesn't matter, so just continue with creation.
 
 <img width="954" alt="image" src="https://github.com/user-attachments/assets/43799971-c3af-41e4-9d45-e4752578a2c0" />
 
