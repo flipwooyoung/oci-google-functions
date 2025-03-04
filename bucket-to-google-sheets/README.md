@@ -16,7 +16,7 @@ To summarise, you will be setting up:
 9. OCI Events to track the changes to the bucket and trigger the Function whenever it happens.
 
 ## IMPORTANT STEPS for GCP Set-up:
-1. If you haven't created a GCP Service Account key, go to:
+1. If you haven't created a GCP Service Account key and/or not a Administrator on , go to:
 https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
 2. Go to your Google Sheet, and share it to the email of the Service Account you created. This won't work otherwise.
