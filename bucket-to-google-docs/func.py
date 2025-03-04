@@ -23,7 +23,7 @@ BUCKET_NAME = "your_bucket_name"
 DOCUMENT_ID = "insert-your-document-id"
 
 #By default you don't need to change this unless you changed the service_account.json location. Change this if you have.
-SERVICE_ACCOUNT_PATH = "../service_account.json"
+SERVICE_ACCOUNT_PATH = "service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
