@@ -1,8 +1,16 @@
-This repository contains materials to transfer objects from OCI Object Storage to Google Workspace tools (e.g. Google Docs), and other forms of Functions.
+This repository contains materials to transfer the most recently uploaded objects from OCI Object Storage to Google Workspace tools (e.g. Google Docs), and other forms of Functions.
 
-| Description                                          | Python | 
-|------------------------------------------------------|:------:|
-| Function to push bucket object contents to google docs|[sample](./bucket-to-google-docs)|
+| Description                                            | Python | 
+|--------------------------------------------------------|:------:|
+| Function to push most recent object to Google Docs     |[sample](./bucket-to-google-docs)|
+| Function to append most recent object to Google Sheets |[sample](./bucket-to-google-sheets)|
+
+| Debug Tools                                                | Python | 
+|------------------------------------------------------------|:------:|
+| Function to test bucket to OCI function connectivity       |[to-do]|
+| Function to test Google API to OCI function connectivity   |[to-do]|
+
+
 
 
 You will require a Google Account to utilize Google API, and a Service Account to use the code on this repository.
@@ -61,7 +69,10 @@ Allow group {group name} to use virtual-network-family in compartment {function_
 ## Debugging section
 On the off-chance you have errors that you need help debugging, there are debug functions to assist in testing your connectivity to either OCI Object Storage/ Google API.
 
-[Debugging]
+| Debug Tools                                                | Python | 
+|------------------------------------------------------------|:------:|
+| Function to test bucket to OCI function connectivity       |[to-do]|
+| Function to test Google API to OCI function connectivity   |[to-do]|
 
 Resources referenced:
 
@@ -71,5 +82,8 @@ https://docs.oracle.com/en-us/iaas/tools/python/2.145.0/api/object_storage/clien
 -Google Cloud Platform Cloud Console
 https://console.cloud.google.com
 
--Google API Documentation
+-Google Docs API Documentation
 https://googleapis.github.io/google-api-python-client/docs/dyn/docs_v1.documents.html#get
+
+-Google Sheets API Documentation
+https://developers.google.com/sheets/api/guides/concepts
