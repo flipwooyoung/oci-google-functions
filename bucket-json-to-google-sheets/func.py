@@ -18,10 +18,10 @@ import oci.object_storage
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 #Change this to your bucket name
-BUCKET_NAME = "your_bucket_name"
+BUCKET_NAME = "test_bucket"
 
 # The ID of your sheet. Go to the git repo to see how to get your document ID. Only change the SAMPLE_RANGE_NAME if you want to change the column affected.
-SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
+SAMPLE_SPREADSHEET_ID = "1-6l-5nAjUhwbOY8JwiOL1H724GKpFel0_81SweCUHUI"
 
 #Only change the SAMPLE_RANGE_NAME if you want to change the column affected. Make sure to put {sheet_name}!A1 without the {}, iF your sheet name isn't Sheet1
 SAMPLE_RANGE_NAME = "Sheet1!A1"
@@ -57,6 +57,12 @@ def get_object(bucketName, objectName): # This Function gets the contents of the
         if object.status == 200:
             print("Success: The object " + objectName + " was retrieved with the content: " + object.data.text, flush=True)
             message = object.data.text
+            #Validation to check whether object is a .json file. Else exit from function.
+            if objectName.lower().endswith(".json"):
+                json_data = json.loads(message)
+            else:
+                message = "Most recent object is a text, so this function doesn't work"
+                return message
         else:
             message = "Failed: The object " + objectName + " could not be retrieved."
     except Exception as e:
@@ -70,8 +76,36 @@ def get_object(bucketName, objectName): # This Function gets the contents of the
         scoped_credentials = credentials.with_scopes(SCOPES)
         service = build('sheets', 'v4', credentials=scoped_credentials)
 
-        #Put the message extracted from object storage to a list
-        values_to_append = [[message]]
+        #JSON Configuration (OPTIONAL). Put your own code configuration for the json here. Set the variable you are extracting from the json as json_extract
+        json_extract = json_data #Comment this line out if you are adding your own JSON configuration.
+
+        #This is a sample code that pushes a transcription key value as the json_extract
+        #for item in json_data['transcriptions']:
+            #json_extract = item.get('transcription')
+        
+        #This is a sample code that pushes all the values in your json as a list variable to the json_extract. This code makes your json_extract push to Google Sheets horizontal/vertical depending on the list you choose. By default it is horizontal list.
+        #horizontal_list = []
+        #vertical_list = []
+        #for item in data.values():
+            #horizontal_list.append(item)
+            #vertical_list.append([item])
+        #json_extract = horizontal_list
+        
+        #This is another sample code that pushes a transcription key value as the json_extract
+        #if "transcriptions" in json_data and isinstance(json_data["transcriptions"], list) and len(json_data["transcriptions"]) > 0 and "transcription" in json_data["transcriptions"][0]:
+            #json_extract = json_data["transcriptions"][0]["transcription"]
+        #-----------------END OF JSON CONFIGURATION-----------------
+    
+
+        #Puts the json_extract to a list for appending to the request body. In the case you want to 
+        if isinstance(json_extract, list):
+            values_to_append = [
+                json_extract
+            ]
+        else:
+            values_to_append = [
+                [str(json_extract)]
+            ]
         
         # Set up the body to append with created list
         body = {
@@ -85,7 +119,7 @@ def get_object(bucketName, objectName): # This Function gets the contents of the
     except Exception as e:
         return {"error": str(e)}
     #Code to return message
-    return message
+    return str(json_extract)
     
 
 def list_objects(bucketName):  # This function extracts the name of the latest object you uploaded in object storage.
