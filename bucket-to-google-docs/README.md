@@ -15,8 +15,8 @@ To summarise, you will be setting up:
 8. OCI Functions to allow us to run an application that will utilize Google API.
 9. OCI Events to track the changes to the bucket and trigger the Function whenever it happens.
 
-## IMPORTANT STEPS for GCP Set-up:
-1. If you haven't created a GCP Service Account key, go to:
+## IMPORTANT STEPS for GCP and OCI Set-up:
+1. If you haven't created a GCP Service Account key and/or not a Administrator on , go to:
 https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
 2. Go to your Google Doc, and share it to the email of the Service Account you created. This won't work otherwise.
@@ -68,18 +68,23 @@ Allow dynamic-group {function_dynamic_group_name} to read objects in compartment
 
 <img width="712" alt="image" src="https://github.com/user-attachments/assets/c5ab41e9-ed89-4381-aab8-183acfaac8ca" />
 
-8. Run this command, to clone this github repo: git clone https://github.com/flipwooyoung/oci-google-functions
+8. Run this command to set the compartment you push images to. Note: This is necessary if you don't have administrator privileges.
+```
+fn update context oracle.image-compartment-id <function_compartment-ocid>
+```
 
-9. Go to this directory:
+9. Run this command, to clone this github repo: git clone https://github.com/flipwooyoung/oci-google-functions
+
+10. Go to this directory:
 ```
 cd oci-google-functions/bucket-to-google-docs
 ```
 
-10. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
+11. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
 
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/ccc888ed-9619-4765-87a6-9e3e43ecbcb1" />
 
-11. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/bucket-to-google-docs/func.py. This python file contains all the code for this function. First, set up the document ID. Go to line 23, and change this to the document ID of your Google Doc that you want to set as the target.
+12. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/bucket-to-google-docs/func.py. This python file contains all the code for this function. First, set up the document ID. Go to line 23, and change this to the document ID of your Google Doc that you want to set as the target.
 
 <img width="551" alt="image" src="https://github.com/user-attachments/assets/43aa9423-9ec0-46d7-b0d9-e5084ef56688" />
 
@@ -87,27 +92,27 @@ Go to your Google Doc link. This is your document ID.
 
 <img width="605" alt="image" src="https://github.com/user-attachments/assets/51ce5d98-12a4-4355-bf14-eef2538342c5" />
 
-12. Make sure to set the bucket name at line 20. Change the string value to the name of your bucket.
+13. Make sure to set the bucket name at line 20. Change the string value to the name of your bucket.
 
-13. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. There is a service_account.json in the repo that you should have cloned too. Fill in all the json values with the ones in your service account .json
+14. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. There is a service_account.json in the repo that you should have cloned too. Fill in all the json values with the ones in your service account .json
 
-14. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this:
+15. Now you need to set up the function. You should already be in the  oci-google-functions/bucket-to-google-docs directory from a previous step, but in case you aren't, cd there.  Follow the command in Step 10 of the Getting Started page. It should be similar to this:
 ```
 fn -v deploy --app {application_name}
 ```
 
-15. Now that you have set it up, use this command to invoke the function for testing:
+16. Now that you have set it up, use this command to invoke the function for testing:
 ```
 fn invoke {application_name} bucket-to-google-docs
 ```
 
-16. This function should display the text of the latest object you uploaded. If successful, move on to 17, if not, try rerunning the function invoke cmd again.
+17. This function should display the text of the latest object you uploaded. If successful, move on to 17, if not, try rerunning the function invoke cmd again.
 
-17. Now it's time to set up the OCI Event. Just search up Rules in the search bar, and create the rule with these conditions. (You have to type your bucket name, can't select it.)
+18. Now it's time to set up the OCI Event. Just search up Rules in the search bar, and create the rule with these conditions. (You have to type your bucket name, can't select it.)
 
 <img width="554" alt="image" src="https://github.com/user-attachments/assets/fc5874d6-83ee-4666-b3d4-3b9a72b44295" />
 
-18. Set the Action as so (Function should be bucket-to-google-docs):
+19. Set the Action as so (Function should be bucket-to-google-docs):
 
 <img width="803" alt="image" src="https://github.com/user-attachments/assets/9deff2cf-02c7-4a67-bc6d-7f2c865536b1" />
 
