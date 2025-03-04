@@ -15,8 +15,8 @@ To summarise, you will be setting up:
 8. OCI Functions to allow us to run an application that will utilize Google API.
 9. OCI Events to track the changes to the bucket and trigger the Function whenever it happens.
 
-## IMPORTANT STEPS for GCP Set-up:
-1. If you haven't created a GCP Service Account key and/or not a Administrator on , go to:
+## IMPORTANT STEPS for GCP and OCI Set-up:
+1. If you haven't created a GCP Service Account key and/or not an Administrator on OCI, go to:
 https://github.com/flipwooyoung/oci-google-functions/blob/main/README.md
 
 2. Go to your Google Sheet, and share it to the email of the Service Account you created. This won't work otherwise.
@@ -73,18 +73,22 @@ Allow dynamic-group {function_dynamic_group_name} to read objects in compartment
 fn update context oracle.image-compartment-id <function_compartment-ocid>
 ```
 
-9. Run this command, to clone this github repo: git clone https://github.com/flipwooyoung/oci-google-functions
+9. Run this command, to clone this github repo:
+```
+git clone https://github.com/flipwooyoung/oci-google-functions
+```
 
 10. Go to this directory:
+
 ```
 cd oci-google-functions/bucket-to-google-sheets
 ```
 
-11. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
+12. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
 
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/ccc888ed-9619-4765-87a6-9e3e43ecbcb1" />
 
-12. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/bucket-to-google-sheets/func.py. This python file contains all the code for this function. First, set up the SAMPLE_SPREADSHEET_ID. Go to line 23, and change this to the sheet ID of your Google sheet that you want to set as the target.
+13. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/bucket-to-google-sheets/func.py. This python file contains all the code for this function. First, set up the SAMPLE_SPREADSHEET_ID. Go to line 23, and change this to the sheet ID of your Google sheet that you want to set as the target.
 
 <img width="664" alt="image" src="https://github.com/user-attachments/assets/e8249e5e-0477-4cad-bc03-b64c764e6383" />
 
@@ -92,34 +96,34 @@ Go to your Google Sheet link. This is your sheet ID.
 
 <img width="525" alt="image" src="https://github.com/user-attachments/assets/416876ba-f695-49bd-90c3-0989cc1cc971" />
 
-13. Make sure to set the bucket name at line 20. Change the string value to the name of your bucket.
+14. Make sure to set the bucket name at line 20. Change the string value to the name of your bucket.
 
-14. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. There is a service_account.json in the repo that you should have cloned too. Fill in all the json values with the ones in your service account .json
+15. You also need to set up the service account .json file you downloaded from your GCP Cloud Console. There is a service_account.json in the repo that you should have cloned too. Fill in all the json values with the ones in your service account .json
 
-15. Now you need to set up the function. cd to the directory of the function, if you still haven't. 
+16. Now you need to set up the function. cd to the directory of the function, if you still haven't. 
 ```
 cd oci-google-functions/bucket-to-google-sheets
 ```
 
-16. Follow the command in Step 10 of the Getting Started page or copy the below command:
+17. Follow the command in Step 10 of the Getting Started page or copy the below command:
 ```
 fn -v deploy --app {application_name}
 ```
 
-17. Now that you have set it up, use this command to invoke the function for testing, or just copy it from Step 11  of the Getting Started page:
+18. Now that you have set it up, use this command to invoke the function for testing, or just copy it from Step 11  of the Getting Started page:
 ```
 fn invoke {application_name} bucket-to-google-docs
 ```
 
-18. This function should display the text of the latest object you uploaded. If successful, move on to 17, if not, try rerunning the function invoke cmd again.
+19. This function should display the text of the latest object you uploaded. If successful, move on to the next step, if not, try rerunning the function invoke command again. Otherwise, go to {insert debug section later}
 
-19. Now it's time to set up the OCI Event. Just search up Rules in the search bar, and create the rule with these conditions. (You have to type your bucket name, can't select it.)
+20. Now it's time to set up the OCI Event. Just search up Rules in the search bar, and create the rule with these conditions. (You have to type your bucket name, can't select it.)
 
 <img width="554" alt="image" src="https://github.com/user-attachments/assets/fc5874d6-83ee-4666-b3d4-3b9a72b44295" />
 
-20. Set the Action to where your function compartment is (Function should be bucket-to-google-sheets):
+21. Set the Action to where your function compartment is (Function should be bucket-to-google-sheets):
 
 <img width="790" alt="image" src="https://github.com/user-attachments/assets/dbc6cdfa-fb06-446e-a33c-8c6143cb054e" />
 
-21. Congratulations. You set up everything. Test it out by uploading an object to the bucket.
+22. Congratulations. You set up everything. Test it out by uploading an object to the bucket.
 
