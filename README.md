@@ -32,25 +32,25 @@ You will require a Google Account to utilize Google API, and a Service Account t
 
 <img width="428" alt="image" src="https://github.com/user-attachments/assets/8df77468-c653-4113-b788-9f1443c65d54" />
 
-6. For the second part, you will have to create an Application.
+6. For the second part, you will have to create an Application. Go to https://console.cloud.google.com/auth/branding, and create an app there. The variables do not matter, so set them as you like.
 
-6. For the final part, you will have to set up permissions for this Service Account. Give Editor to the Service Account for the strongest privilege, but if you only require Workspace permissions, just search Workspace and select between Workspace Developer and Reader. Continue with creation.
+7. For the final part, you will have to set up permissions for this Service Account. Give Editor to the Service Account for the strongest privilege, but if you only require Workspace permissions, just search Workspace and select between Workspace Developer and Reader. Continue with creation.
 
 <img width="954" alt="image" src="https://github.com/user-attachments/assets/43799971-c3af-41e4-9d45-e4752578a2c0" />
 
-7. Now that you have created a Service Account, you will have to create a key for it. Go to your created Service Account's options, and click on Manage Keys.
+8. Now that you have created a Service Account, you will have to create a key for it. Go to your created Service Account's options, and click on Manage Keys.
 
 <img width="946" alt="image" src="https://github.com/user-attachments/assets/54ef1526-4b0d-4fc7-b9e7-cb386dddade1" />
 
-8. Click on Add Key. Either create a new key or upload an existing one. This guide creates a new key.
+9. Click on Add Key. Either create a new key or upload an existing one. This guide creates a new key.
 
 <img width="955" alt="image" src="https://github.com/user-attachments/assets/2308056b-fc8d-4ffc-af16-298bcc34cd25" />
 
-9. Keep json as the selected option, and select Create. You will automatically download your Service Account key as a .json file. Keep it in a secure location, as it is how you will be authorizing your Google API in this github repo.
+10. Keep json as the selected option, and select Create. You will automatically download your Service Account key as a .json file. Keep it in a secure location, as it is how you will be authorizing your Google API in this github repo.
 
 <img width="374" alt="image" src="https://github.com/user-attachments/assets/2d52f5cd-03f8-4578-8b6b-d018195c465d" />
 
-10. Congrats! You created your Service Account and a key to access it. As long as you have given sufficient permissions (Scopes, which will be went through in their respective function) to the Service Account, you can do everything in this Repository with the key.
+11. Congrats! You created your Service Account and a key to access it. As long as you have given sufficient permissions (Scopes, which will be went through in their respective function) to the Service Account, you can do everything in this Repository with the key.
 
 ## OCI Policy Set-up for Function
 
