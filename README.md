@@ -1,4 +1,4 @@
-This repository contains materials to transfer objects from OCI Object Storage to Google Workspace tools (e.g. Google Docs).
+This repository contains materials to transfer objects from OCI Object Storage to Google Workspace tools (e.g. Google Docs), and other forms of Functions.
 
 You will require a Google Account to utilize Google API, and a Service Account to use the code on this repository.
 
@@ -40,7 +40,7 @@ You will require a Google Account to utilize Google API, and a Service Account t
 
 ## OCI Policy Set-up for Function
 
-To utilize OCI Functions, you may require some policies if you are not an administrator. These are the policies you require. 
+To utilize OCI Functions, you may require some policies if you are not an administrator. These are the basic policies you require. 
 
 ```
 Allow group {group_name} to use cloud-shell in tenancy
@@ -50,6 +50,11 @@ Allow group {group_name} to manage repos in compartment {function_compartment}
 Allow group {group_name} to manage functions-family in compartment {function_compartment}
 Allow group {group name} to use virtual-network-family in compartment {function_compartment}
 ```
+
+## Debugging section
+On the off-chance you have errors that you need help debugging, there are debug functions to assist in testing your connectivity to either OCI Object Storage/ Google API.
+
+[Debugging]
 
 Resources referenced:
 
