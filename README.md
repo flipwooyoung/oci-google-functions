@@ -7,7 +7,8 @@ How to get Service Account from GCP Cloud Console:
 1. Go to GCP (https://console.cloud.google.com).
 2. Create a Project if you don't have one. The project used doesn't matter, but for the sake of safety, you should create a project for each application you create.
 
-use this code: ``` Hi ```
+use this code: ``` Hi 
+```
 
 <img width="959" alt="image" src="https://github.com/user-attachments/assets/97d495e8-73a0-4931-be5c-af89d663ae11" />
 3. Go to Service Accounts from the search bar.
