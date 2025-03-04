@@ -27,7 +27,7 @@ SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
 SAMPLE_RANGE_NAME = "Sheet1!A1"
 
 #By default you don't need to change this unless you changed the service_account.json location. Change this if you have.
-SERVICE_ACCOUNT_PATH = "../service_account.json"
+SERVICE_ACCOUNT_PATH = "service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
