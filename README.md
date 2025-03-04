@@ -1,5 +1,10 @@
 This repository contains materials to transfer objects from OCI Object Storage to Google Workspace tools (e.g. Google Docs), and other forms of Functions.
 
+| Description                                          | Python | 
+|------------------------------------------------------|:------:|
+| Function to push bucket object contents to google docs|[sample](./bucket-to-google-docs)|
+
+
 You will require a Google Account to utilize Google API, and a Service Account to use the code on this repository.
 
 ## How to get Service Account from GCP Cloud Console:
@@ -20,7 +25,9 @@ You will require a Google Account to utilize Google API, and a Service Account t
 
 <img width="428" alt="image" src="https://github.com/user-attachments/assets/8df77468-c653-4113-b788-9f1443c65d54" />
 
-6. For the second part, you will have to set up permissions for this Service Account. Give Editor to the Service Account for the strongest privilege, but if you only require Workspace permissions, just search Workspace and select between Workspace Developer and Reader. The third part doesn't matter, just continue with creation.
+6. For the second part, you will have to create an Application.
+
+6. For the final part, you will have to set up permissions for this Service Account. Give Editor to the Service Account for the strongest privilege, but if you only require Workspace permissions, just search Workspace and select between Workspace Developer and Reader. Continue with creation.
 
 <img width="954" alt="image" src="https://github.com/user-attachments/assets/43799971-c3af-41e4-9d45-e4752578a2c0" />
 
@@ -32,11 +39,11 @@ You will require a Google Account to utilize Google API, and a Service Account t
 
 <img width="955" alt="image" src="https://github.com/user-attachments/assets/2308056b-fc8d-4ffc-af16-298bcc34cd25" />
 
-9. Keep json as the selected option, and select Create. You will automatically download your Service Account key as a .json file. Keep it in a secure location, as it is how you authorize yourself.
+9. Keep json as the selected option, and select Create. You will automatically download your Service Account key as a .json file. Keep it in a secure location, as it is how you will be authorizing your Google API in this github repo.
 
 <img width="374" alt="image" src="https://github.com/user-attachments/assets/2d52f5cd-03f8-4578-8b6b-d018195c465d" />
 
-10. Congrats! You created your Service Account and a key to access it. As long as you have given sufficient permissions to the Service Account, you can do everything in this Repository with the key.
+10. Congrats! You created your Service Account and a key to access it. As long as you have given sufficient permissions (Scopes, which will be went through in their respective function) to the Service Account, you can do everything in this Repository with the key.
 
 ## OCI Policy Set-up for Function
 
