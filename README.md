@@ -39,9 +39,14 @@ You will require a Google Account to utilize Google API, and a Service Account t
 
 ## OCI Policy Set-up for Function
 
+To utilize OCI Functions, you may require some policies if you are not an administrator. These are the policies you require. 
+
 ```
-hi
-hello
+Allow group {group_name} to use cloud-shell in compartment {function_compartment}
+Allow group {group_name} to read objectstorage-namespaces in compartment {function_compartment}
+Allow group {group_name} to use cloud-shell-public-network in compartment {function_compartment}
+Allow group {group_name} to manage repos in compartment {function_compartment}
+Allow group {group_name} to manage functions-family in compartment {function_compartment}
 ```
 
 Resources referenced:
