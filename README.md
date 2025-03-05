@@ -5,6 +5,7 @@ This repository contains materials to transfer the most recently uploaded object
 | _**OCI To Google Functions**_ |
 | Function to push most recent object to Google Docs     |[sample](./bucket-to-google-docs)|
 | Function to append most recent object to Google Sheets |[sample](./bucket-to-google-sheets)|
+| Function to append most recent json to Google Sheets   |[sample](./bucket-json-to-google-sheets)|
 | _**Debug Tools**_ |
 | Function to test bucket to OCI function connectivity       |[to-do]|
 | Function to test Google API to OCI function connectivity   |[to-do]|
