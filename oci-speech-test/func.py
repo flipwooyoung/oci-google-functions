@@ -15,15 +15,25 @@ from fdk import response
 import oci
 import oci.ai_speech
 
+#Change this to your source bucket with videos
+SOURCE_BUCKET = "source_video_bucket"
+
+#Change this to where your destination bucket should be (can be the same as source bucket)
+DESTINATION_BUCKET = "destination_video_bucket"
+
+#Change this to be your source bucket compartment OCID
+SOURCE_COMPARTMENT_OCID = "source_compartment_ocid"
+
 def handler(ctx, data: io.BytesIO=None):
     try:
-        body = {"bucketName": "oci_speech_bucket"}
+        body = {"bucketName": SOURCE_BUCKET}
         bucketName = body["bucketName"]
     except Exception:
         raise Exception('Input a JSON object in the format: \'{"bucketName": "<bucket name>"}\' ')
     
-    object_name, namespace = list_objects(bucketName)
-    resp = create_oci_speech_job(bucketName, object_name, namespace)
+    object_name, namespace = list_objects(SOURCE_BUCKET)
+
+    resp = create_oci_speech_job(object_name, namespace)
 
 
     return response.Response(
@@ -40,7 +50,8 @@ def list_objects(bucketName):
     object = client.list_objects(namespace, bucketName, fields = "timeModified")
     print("found objects", flush=True)
     #object_names = [b.name for b in object.data.objects]
-
+    
+    
     #This works for some reason
     latest_modification_date = max(([b.time_modified for b in object.data.objects]))
     #latest_object = str(max(object.data.objects, key=lambda x:x['time_modified']))
@@ -59,33 +70,39 @@ def list_objects(bucketName):
     #response = str(found_object)
     return response, namespace
 
-def create_oci_speech_job(bucketName, object_name, namespace):
+def create_oci_speech_job(object_name, namespace):
     # Initialize service client with default config file
     signer = oci.auth.signers.get_resource_principals_signer()
     ai_speech_client = oci.ai_speech.AIServiceSpeechClient(config={}, signer=signer)
 
-    source_bucket_name = "oci_speech_bucket"
-    source_compart = "ocid1.compartment.oc1..aaaaaaaakyhbyurv7jfhbfqnr7auf3wbydtoeixltukixjqq4lphe2gtykdq"
+    #PUT YOUR VARIABLES HERE
+    source_bucket_name = SOURCE_BUCKET
+    source_compart = SOURCE_COMPARTMENT_OCID
+    dest_bucket = DESTINATION_BUCKET
 
-    dest_bucket = bucketName    
+
     #create_transcription_job_response = "hello"
     try:
         create_transcription_job_response = ai_speech_client.create_transcription_job(
             create_transcription_job_details=oci.ai_speech.models.CreateTranscriptionJobDetails(
                 compartment_id=source_compart,
-                input_location=oci.ai_speech.models.ObjectListFileInputLocation(
-                    location_type="OBJECT_LIST_FILE_INPUT_LOCATION", #You can change this to OBJECT_LIST_INLINE_INPUT_LOCATION for some reason
-                    object_location=oci.ai_speech.models.ObjectLocation(
+                input_location=oci.ai_speech.models.ObjectListInlineInputLocation(
+                    location_type="OBJECT_LIST_INLINE_INPUT_LOCATION", #You can change this to OBJECT_LIST_FILE_INPUT_LOCATION for some reason, but dont
+                    object_locations=[
+                    oci.ai_speech.models.ObjectLocation(
                             namespace_name=namespace,
                             bucket_name=source_bucket_name,
-                            object_names=["sample-0.mp3"]
+                            object_names=["object_name"]
                         )
+                    ]
                 ),
                 output_location=oci.ai_speech.models.OutputLocation(
                     namespace_name=namespace,
-                    bucket_name=dest_bucket),
+                    bucket_name=dest_bucket,
+                    #You can change this if you want a different output
+                    prefix="output"),
                 additional_transcription_formats=["SRT"],
-                display_name = "working",
+                display_name = object_name,
                 model_details=oci.ai_speech.models.TranscriptionModelDetails(
                     domain="GENERIC",
                     language_code="en-GB",
@@ -97,6 +114,8 @@ def create_oci_speech_job(bucketName, object_name, namespace):
                         )
                     )
                 )
+
+
     except Exception as e:
         return {"error": str(e)}
 
