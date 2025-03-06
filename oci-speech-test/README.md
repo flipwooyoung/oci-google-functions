@@ -1,4 +1,4 @@
-# OCI Object Storage to Google Sheets
+<img width="493" alt="image" src="https://github.com/user-attachments/assets/77342bf9-8709-4149-a8a9-a1b844ad8f14" /># OCI Object Storage to Google Sheets
 
 This setup allows you to utilize OCI Functions to convert a video file (mp3, wav, etc.) to text using OCI Speech. This setup uses OCI Events and OCI Functions to track updates to the bucket, and trigger the function to read the contents of the object that has been added, before updating a Google Sheet you specify with those contents. Note: this function only automatically takes the latest uploaded object to the bucket.
 
@@ -73,7 +73,7 @@ cd ~/oci-google-functions/oci-speech-test
 
 12. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/oci-speech-test/func.py. Change the variables at line 18-25. The SOURCE_BUCKET, DESTINATION_BUCKET, SOURCE_COMPARTMENT_OCID, change these to your resource requirements.
 
-
+<img width="493" alt="image" src="https://github.com/user-attachments/assets/16524010-bb4c-4137-9e89-7368833a517d" />
 
 13. Now you need to set up the function. cd to the directory of the function, if you still haven't. 
 ```
@@ -100,5 +100,5 @@ fn invoke {application_name} oci-speech-test
 
 <img width="790" alt="image" src="https://github.com/user-attachments/assets/dbc6cdfa-fb06-446e-a33c-8c6143cb054e" />
 
-19. Congratulations. You set up everything. Test it out by uploading an object to the bucket.
+19. Congratulations. You set up everything. Test it out by uploading an video to the bucket.
 
