@@ -71,7 +71,9 @@ cd ~/oci-google-functions/oci-speech-test
 
 <img width="240" alt="image" src="https://github.com/user-attachments/assets/ccc888ed-9619-4765-87a6-9e3e43ecbcb1" />
 
-12. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/oci-speech-test/func.py. Change the variables at 
+12. Now you need to set up the function with your variables. Go to Code Editor, and go to oci-google-functions/oci-speech-test/func.py. Change the variables at line 18-25. The SOURCE_BUCKET, DESTINATION_BUCKET, SOURCE_COMPARTMENT_OCID, change these to your resource requirements.
+
+
 
 13. Now you need to set up the function. cd to the directory of the function, if you still haven't. 
 ```
