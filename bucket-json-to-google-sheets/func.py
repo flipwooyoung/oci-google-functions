@@ -21,7 +21,7 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 BUCKET_NAME = "test_bucket"
 
 # The ID of your sheet. Go to the git repo to see how to get your document ID. Only change the SAMPLE_RANGE_NAME if you want to change the column affected.
-SAMPLE_SPREADSHEET_ID = "1-6l-5nAjUhwbOY8JwiOL1H724GKpFel0_81SweCUHUI"
+SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
 
 #Only change the SAMPLE_RANGE_NAME if you want to change the column affected. Make sure to put {sheet_name}!A1 without the {}, iF your sheet name isn't Sheet1
 SAMPLE_RANGE_NAME = "Sheet1!A1"
