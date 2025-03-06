@@ -18,7 +18,7 @@ import oci.object_storage
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 #Change this to your bucket name
-BUCKET_NAME = "test_bucket"
+BUCKET_NAME = "your_bucket_name"
 
 # The ID of your sheet. Go to the git repo to see how to get your document ID. Only change the SAMPLE_RANGE_NAME if you want to change the column affected.
 SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
