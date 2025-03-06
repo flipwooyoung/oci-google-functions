@@ -84,6 +84,9 @@ On the off-chance you have errors that you need help debugging, there are debug 
 -OCI Object Storage API Documentation
 https://docs.oracle.com/en-us/iaas/tools/python/2.145.0/api/object_storage/client/oci.object_storage.ObjectStorageClient.html#oci.object_storage.ObjectStorageClient.list_objects
 
+-OCI AI Speech API Documentation
+https://docs.oracle.com/en-us/iaas/tools/python/2.146.0/api/ai_speech.html
+
 -Google Cloud Platform Cloud Console
 https://console.cloud.google.com
 
@@ -92,3 +95,4 @@ https://googleapis.github.io/google-api-python-client/docs/dyn/docs_v1.documents
 
 -Google Sheets API Documentation
 https://developers.google.com/sheets/api/guides/concepts
+
