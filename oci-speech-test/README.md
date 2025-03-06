@@ -1,4 +1,4 @@
-<img width="493" alt="image" src="https://github.com/user-attachments/assets/77342bf9-8709-4149-a8a9-a1b844ad8f14" /># OCI Object Storage to Google Sheets
+OCI Object Storage Speech to Text
 
 This setup allows you to utilize OCI Functions to convert a video file (mp3, wav, etc.) to text using OCI Speech. This setup uses OCI Events and OCI Functions to track updates to the bucket, and trigger the function to read the contents of the object that has been added, before updating a Google Sheet you specify with those contents. Note: this function only automatically takes the latest uploaded object to the bucket.
 
