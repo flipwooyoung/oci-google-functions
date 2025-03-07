@@ -10,6 +10,7 @@ import io
 import os
 import json
 import sys
+import logging
 from fdk import response
 
 import oci.object_storage
@@ -30,15 +31,29 @@ SAMPLE_RANGE_NAME = "Sheet1!A1"
 SERVICE_ACCOUNT_PATH = "service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
-    try:
-        body = {"bucketName": BUCKET_NAME}
-        bucketName = body["bucketName"]
-    except Exception:
-        raise Exception('Input a JSON object in the format: \'{"bucketName": "<bucket name>"}\' ')
-        
-    extracted_object_name = list_objects(bucketName)
 
-    resp = get_object(bucketName, extracted_object_name)
+    try:
+        data_bytes = data.getvalue()
+        data_str = data_bytes.decode('utf-8')
+        data_object = None
+        
+        if data_str == "":
+            data_object = list_latest_object(BUCKET_NAME)
+        else:
+            data_json = json.loads(data.getvalue())
+            logging.getLogger().info(json.dumps(data_json))
+            data_namespace = data_json["data"]["additionalDetails"]["namespace"]
+            data_nsrc_bucket = data_json["data"]["additionalDetails"]["bucketName"]
+            data_object = data_json["data"]["resourceName"]
+    except (Exception, ValueError) as ex:
+        logging.getLogger().error(str(ex))
+
+    if not data_object:
+        resp = "Wasn't able to extract object properly"
+    else:
+        text_message = get_object_content(BUCKET_NAME, data_object)
+        google_sheets_append(text_message)
+        resp = text_message
 
     return response.Response(
         ctx,
@@ -46,7 +61,7 @@ def handler(ctx, data: io.BytesIO=None):
         headers={"Content-Type": "application/json"}
     )
 
-def get_object(bucketName, objectName): # This Function gets the contents of the object you specify, and creates message with the content.
+def get_object_content(bucketName, objectName): # This Function gets the contents of the object you specify, and creates message with the content.
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
@@ -61,34 +76,11 @@ def get_object(bucketName, objectName): # This Function gets the contents of the
             message = "Failed: The object " + objectName + " could not be retrieved."
     except Exception as e:
         message = "Failed: " + str(e.message)
-    
-    # Google upload code to Google Sheets, using the message variable gained.
-    try:
-        # Load the service account key from the service_account.json
-        credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
-        credentials = service_account.Credentials.from_service_account_info(credentials_info)
-        scoped_credentials = credentials.with_scopes(SCOPES)
-        service = build('sheets', 'v4', credentials=scoped_credentials)
-
-        #Put the message extracted from object storage to a list
-        values_to_append = [[message]]
-        
-        # Set up the body to append with created list
-        body = {
-        'values': values_to_append
-        }   
-    # Call the Sheets API
-        sheet = service.spreadsheets().values().append(
-        spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME,
-        valueInputOption='USER_ENTERED', body=body).execute()
-
-    except Exception as e:
-        return {"error": str(e)}
     #Code to return message
     return message
     
 
-def list_objects(bucketName):  # This function extracts the name of the latest object you uploaded in object storage.
+def list_latest_object(bucketName):  # This function extracts the name of the latest object you uploaded in object storage.
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
@@ -109,3 +101,27 @@ def list_objects(bucketName):  # This function extracts the name of the latest o
     #This response extracts the name of the latest object you uploaded in object storage.
     response = str(found_object.name)
     return response
+
+def google_sheets_append(text_message):
+        # Google upload code to Google Sheets, using the message variable gained.
+    try:
+        # Load the service account key from the service_account.json
+        credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
+        credentials = service_account.Credentials.from_service_account_info(credentials_info)
+        scoped_credentials = credentials.with_scopes(SCOPES)
+        service = build('sheets', 'v4', credentials=scoped_credentials)
+
+        #Put the message extracted from object storage to a list
+        values_to_append = [[str(text_message)]]
+        
+        # Set up the body to append with created list
+        body = {
+        'values': values_to_append
+        }   
+    # Call the Sheets API
+        sheet = service.spreadsheets().values().append(
+        spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME,
+        valueInputOption='USER_ENTERED', body=body).execute()
+    except Exception as e:
+        return {"error": str(e)}
+        

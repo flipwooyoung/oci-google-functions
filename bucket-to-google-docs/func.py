@@ -9,6 +9,7 @@ import google.auth
 import io
 import os
 import json
+import logging
 import sys
 from fdk import response
 
@@ -27,14 +28,28 @@ SERVICE_ACCOUNT_PATH = "service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
-        body = {"bucketName": BUCKET_NAME}
-        bucketName = body["bucketName"]
-    except Exception:
-        raise Exception('Input a JSON object in the format: \'{"bucketName": "<bucket name>"}\' ')
+        data_bytes = data.getvalue()
+        data_str = data_bytes.decode('utf-8')
+        data_object = None
         
-    extracted_object_name = list_objects(bucketName)
+        if data_str == "":
+            data_object = list_latest_object(BUCKET_NAME)
+        else:
+            data_json = json.loads(data.getvalue())
+            logging.getLogger().info(json.dumps(data_json))
+            data_namespace   = data_json["data"]["additionalDetails"]["namespace"]
+            data_nsrc_bucket  = data_json["data"]["additionalDetails"]["bucketName"]
+            data_object = data_json["data"]["resourceName"]
+    except (Exception, ValueError) as ex:
+        logging.getLogger().error(str(ex))
 
-    resp = get_object(bucketName, extracted_object_name)
+    if not data_object:
+        resp = "Wasn't able to extract object properly"
+    else:
+        text_message = get_object_content(BUCKET_NAME, data_object)
+        google_docs_replace(text_message)
+        resp = text_message
+
 
     return response.Response(
         ctx,
@@ -42,7 +57,7 @@ def handler(ctx, data: io.BytesIO=None):
         headers={"Content-Type": "application/json"}
     )
 
-def get_object(bucketName, objectName):
+def get_object_content(bucketName, objectName):
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
@@ -57,7 +72,32 @@ def get_object(bucketName, objectName):
             message = "Failed: The object " + objectName + " could not be retrieved."
     except Exception as e:
         message = "Failed: " + str(e.message)
+    #Code to return message
+    return message
     
+
+def list_latest_object(bucketName):
+    signer = oci.auth.signers.get_resource_principals_signer()
+    client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
+    namespace = client.get_namespace().data
+    print("Searching for objects in bucket " + bucketName, file=sys.stderr)
+    object = client.list_objects(namespace, bucketName, fields = "timeModified")
+    print("found objects", flush=True)
+
+    #This works for some reason
+    latest_modification_date = max(([b.time_modified for b in object.data.objects]))
+    found_object = None
+
+    #This also works for some reason. Don't use item[time_modified], it doesn't work.
+    for item in object.data.objects:
+        if item.time_modified == latest_modification_date:
+            found_object = item
+
+    #When creating a response, make sure to convert whatever you have to string, otherwise it will fail.
+    response = str(found_object.name)
+    return response
+
+def google_docs_replace(text_message):
     # Google upload code
     try:
         # Load the service account key from the service_account.json
@@ -109,27 +149,3 @@ def get_object(bucketName, objectName):
 		
     except Exception as e:
         return {"error": str(e)}
-    #Code to return message
-    return message
-    
-
-def list_objects(bucketName):
-    signer = oci.auth.signers.get_resource_principals_signer()
-    client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
-    namespace = client.get_namespace().data
-    print("Searching for objects in bucket " + bucketName, file=sys.stderr)
-    object = client.list_objects(namespace, bucketName, fields = "timeModified")
-    print("found objects", flush=True)
-
-    #This works for some reason
-    latest_modification_date = max(([b.time_modified for b in object.data.objects]))
-    found_object = None
-
-    #This also works for some reason. Don't use item[time_modified], it doesn't work.
-    for item in object.data.objects:
-        if item.time_modified == latest_modification_date:
-            found_object = item
-
-    #When creating a response, make sure to convert whatever you have to string, otherwise it will fail.
-    response = str(found_object.name)
-    return response

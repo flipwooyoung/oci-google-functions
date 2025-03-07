@@ -10,6 +10,7 @@ import io
 import os
 import json
 import sys
+import logging
 from fdk import response
 
 import oci.object_storage
@@ -31,14 +32,34 @@ SERVICE_ACCOUNT_PATH = "service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
-        body = {"bucketName": BUCKET_NAME}
-        bucketName = body["bucketName"]
-    except Exception:
-        raise Exception('Input a JSON object in the format: \'{"bucketName": "<bucket name>"}\' ')
+        data_bytes = data.getvalue()
+        data_str = data_bytes.decode('utf-8')
+        data_object = None
         
-    extracted_object_name = list_objects(bucketName)
+        if data_str == "":
+            data_object = list_latest_object(BUCKET_NAME)
+        else:
+            data_json = json.loads(data.getvalue())
+            logging.getLogger().info(json.dumps(data_json))
+            data_namespace = data_json["data"]["additionalDetails"]["namespace"]
+            data_nsrc_bucket = data_json["data"]["additionalDetails"]["bucketName"]
+            data_object = data_json["data"]["resourceName"]
+            
+            if data_object.lower().endswith(".json"):
+                return
+            else:
+                message = "Most recent object is not a json, so this function doesn't work"
+                data_object = None
+    except (Exception, ValueError) as ex:
+        logging.getLogger().error(str(ex))
 
-    resp = get_object(bucketName, extracted_object_name)
+    if not data_object:
+        resp = "Wasn't able to extract object properly"
+    else:
+        text_message = get_object_content(BUCKET_NAME, data_object)
+        google_sheets_append_json(text_message)
+        resp = text_message
+
 
     return response.Response(
         ctx,
@@ -46,7 +67,7 @@ def handler(ctx, data: io.BytesIO=None):
         headers={"Content-Type": "application/json"}
     )
 
-def get_object(bucketName, objectName): # This Function gets the contents of the object you specify, and creates message with the content.
+def get_object_content(bucketName, objectName): # This Function gets the contents of the object you specify, and creates message with the content.
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     namespace = client.get_namespace().data
@@ -67,8 +88,35 @@ def get_object(bucketName, objectName): # This Function gets the contents of the
             message = "Failed: The object " + objectName + " could not be retrieved."
     except Exception as e:
         message = "Failed: " + str(e.message)
-    
+    return message
+
     # Google upload code to Google Sheets, using the message variable gained.
+
+    
+
+def list_latest_object(bucketName):  # This function extracts the name of the latest object you uploaded in object storage.
+    signer = oci.auth.signers.get_resource_principals_signer()
+    client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
+    namespace = client.get_namespace().data
+    print("Searching for objects in bucket " + bucketName, file=sys.stderr)
+    object = client.list_objects(namespace, bucketName, fields = "timeModified")
+    print("found objects", flush=True)
+
+    #This works for some reason
+    latest_modification_date = max(([b.time_modified for b in object.data.objects]))
+    found_object = None
+
+    #This also works for some reason. Don't use item[time_modified], it doesn't work.
+    for item in object.data.objects:
+        if item.time_modified == latest_modification_date:
+            found_object = item
+
+    #When creating a response, make sure to convert whatever you have to string, otherwise it will fail.
+    #This response extracts the name of the latest object you uploaded in object storage.
+    response = str(found_object.name)
+    return response
+
+def google_sheets_append_json(text_message):
     try:
         # Load the service account key from the service_account.json
         credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
@@ -120,26 +168,3 @@ def get_object(bucketName, objectName): # This Function gets the contents of the
         return {"error": str(e)}
     #Code to return message
     return str(json_extract)
-    
-
-def list_objects(bucketName):  # This function extracts the name of the latest object you uploaded in object storage.
-    signer = oci.auth.signers.get_resource_principals_signer()
-    client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
-    namespace = client.get_namespace().data
-    print("Searching for objects in bucket " + bucketName, file=sys.stderr)
-    object = client.list_objects(namespace, bucketName, fields = "timeModified")
-    print("found objects", flush=True)
-
-    #This works for some reason
-    latest_modification_date = max(([b.time_modified for b in object.data.objects]))
-    found_object = None
-
-    #This also works for some reason. Don't use item[time_modified], it doesn't work.
-    for item in object.data.objects:
-        if item.time_modified == latest_modification_date:
-            found_object = item
-
-    #When creating a response, make sure to convert whatever you have to string, otherwise it will fail.
-    #This response extracts the name of the latest object you uploaded in object storage.
-    response = str(found_object.name)
-    return response
