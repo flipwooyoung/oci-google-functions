@@ -17,13 +17,13 @@ import oci
 import oci.ai_speech
 
 #Change this to your source bucket with videos
-SOURCE_BUCKET = "source_video_bucket"
+SOURCE_BUCKET = "oci_speech_bucket"
 
 #Change this to where your destination bucket should be (can be the same as source bucket)
-DESTINATION_BUCKET = "destination_video_bucket"
+DESTINATION_BUCKET = "oci_speech_bucket"
 
 #Change this to be your source bucket compartment OCID
-SOURCE_COMPARTMENT_OCID = "source_compartment_ocid"
+SOURCE_COMPARTMENT_OCID = "ocid1.compartment.oc1..aaaaaaaakyhbyurv7jfhbfqnr7auf3wbydtoeixltukixjqq4lphe2gtykdq"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
@@ -113,9 +113,8 @@ def create_oci_speech_job(object_name, namespace):
                 output_location=oci.ai_speech.models.OutputLocation(
                     namespace_name=namespace,
                     bucket_name=dest_bucket,
-                    #You can change this if you want a different output
-                    prefix="output"),
-                additional_transcription_formats=["SRT"],
+                    prefix= "output"
+                    ),
                 display_name = object_name,
                 model_details=oci.ai_speech.models.TranscriptionModelDetails(
                     domain="GENERIC",
