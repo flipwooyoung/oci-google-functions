@@ -12,7 +12,7 @@ import json
 import sys
 import logging
 from fdk import response
-
+from openai import OpenAI
 import oci.object_storage
 
 # Modify this to whatever scope you require from google API. The current configuration allows read/write access for Google SHEETS
@@ -29,6 +29,14 @@ SAMPLE_RANGE_NAME = "Sheet1!A1"
 
 #By default you don't need to change this unless you changed the service_account.json location. Change this if you have.
 SERVICE_ACCOUNT_PATH = "service_account.json"
+
+#Change this if you want to change how the GPT model should function.
+GPT_PROMPT = "You will be given a paragraph about a foosball match narration. Clean it up to be appropriate, politically friendly, without changing the content or length at all."
+
+#This automatically gets added if you add in your api key from the readme
+API_KEY_STRING = os.environ['openai_key']
+#If your too lazy (Heavily recommended you dont do this), uncomment the next line
+#API_KEY_STRING = "your_api_key"
 
 def handler(ctx, data: io.BytesIO=None):
     try:
@@ -57,7 +65,8 @@ def handler(ctx, data: io.BytesIO=None):
         resp = "Wasn't able to extract object properly"
     else:
         text_message = get_object_content(BUCKET_NAME, data_object)
-        google_sheets_append_json(text_message)
+        gpt_text = openai_transform(text_message)
+        google_sheets_append_json(gpt_text)
         resp = text_message
 
 
@@ -116,7 +125,29 @@ def list_latest_object(bucketName):  # This function extracts the name of the la
     response = str(found_object.name)
     return response
 
-def google_sheets_append_json(json_data):
+def openai_transform(text_prompt):
+    client = OpenAI(api_key=API_KEY_STRING)
+
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": GPT_PROMPT},
+            {
+                "role": "user",
+                "content": text_prompt
+            }
+        ]
+    )
+
+    gpt_message = completion.choices[0].message
+    text_content = gpt_message.content
+
+    response = text_content
+
+    return response
+
+
+def google_sheets_append_json(text_message):
     try:
         # Load the service account key from the service_account.json
         credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
