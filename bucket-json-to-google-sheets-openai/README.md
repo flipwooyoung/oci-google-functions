@@ -81,7 +81,7 @@ git clone https://github.com/flipwooyoung/oci-google-functions
 10. Go to this directory:
 
 ```
-cd ~/oci-google-functions/bucket-to-google-sheets
+cd ~/oci-google-functions/bucket-to-google-sheets-openai
 ```
 
 12. To confirm, you should have cloned 4 necessary files, the func.py, func.yaml, requirements.txt, and the service_account.json in the main directory. You can check this with ls -la, or even more easier, check with OCI Code Editor.
@@ -113,7 +113,7 @@ fn config app {app_name} openai_key {your_api_key}
 
 18. Now you need to set up the function. cd to the directory of the function, if you still haven't. 
 ```
-cd ~/oci-google-functions/bucket-json-to-google-sheets
+cd ~/oci-google-functions/bucket-json-to-google-sheets-openai
 ```
 
 19. Follow the command in Step 10 of the Getting Started page or copy the below command:
@@ -123,7 +123,7 @@ fn -v deploy --app {application_name}
 
 18. Now that you have set it up, use this command to invoke the function for testing, or just copy it from Step 11  of the Getting Started page:
 ```
-fn invoke {application_name} bucket-json-to-google-sheets
+fn invoke {application_name} bucket-json-to-google-sheets-openai
 ```
 
 20. This function should display the text of the latest object you uploaded. If successful, move on to the next step, if not, try rerunning the function invoke command again. Otherwise, go to [Debug Section]
