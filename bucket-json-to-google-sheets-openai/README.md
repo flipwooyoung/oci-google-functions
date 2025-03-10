@@ -103,7 +103,7 @@ Optional: In the case that you want to send a specific key/value, then go to lin
 15. You need to set your OpenAI API key as a env variable. Use the below command in either Cloud Shell or Code Editor to set it. If you have no idea how to get your OpenAI API key, go to this link: https://medium.com/@lorenzozar/how-to-get-your-own-openai-api-key-f4d44e60c327
 
 ```
-fn config function {app_name} openai_key {your_api_key}
+fn config app {app_name} openai_key {your_api_key}
 ```
 
 16. You can change the prompt for the GPT model if you want to at line 34: The current prompt cleans up the script of a foosball match to be politically correct and clean.
