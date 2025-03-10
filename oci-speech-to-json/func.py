@@ -13,39 +13,47 @@ import oci.ai_speech
 SOURCE_BUCKET = "oci_speech_bucket"
 
 #Change this to where your destination bucket should be (can be the same as source bucket)
-DESTINATION_BUCKET = "oci_speech_bucket"
+DESTINATION_BUCKET = "oci_speech_output_bucket"
 
 #Change this to be your source bucket compartment OCID
 SOURCE_COMPARTMENT_OCID = "ocid1.compartment.oc1..aaaaaaaakyhbyurv7jfhbfqnr7auf3wbydtoeixltukixjqq4lphe2gtykdq"
 
 def handler(ctx, data: io.BytesIO=None):
+    data_bytes = data.getvalue()
+    data_str = data_bytes.decode('utf-8')
+    resp   = ""
+    
     try:
         data_bytes = data.getvalue()
         data_str = data_bytes.decode('utf-8')
         data_object = None
         
-        if data_str == "":
-            data_object, data_namespace = list_latest_object(SOURCE_BUCKET)
+        if data_str == "": #This method is mainly used when invoking without OCI Events
+            logging.getLogger().info(f'Function invoked with OCI Events, getting latest object from {BUCKET_NAME}')
+            data_object = list_latest_object(BUCKET_NAME)
         else:
             data_json = json.loads(data.getvalue())
             logging.getLogger().info(json.dumps(data_json))
             data_namespace = data_json["data"]["additionalDetails"]["namespace"]
-            data_nsrc_bucket = data_json["data"]["additionalDetails"]["bucketName"]
+            data_source_bucket = data_json["data"]["additionalDetails"]["bucketName"]
             data_object = data_json["data"]["resourceName"]
+            logging.getLogger().info(f'Preparing Speech Job with {data_object} from {data_source_bucket}')
             
-            if data_object.lower().endswith(".mp3"):
-                return
+            if str(data_object).lower().endswith(".mp3"):
+                logging.getLogger().info(f'mp3 validation works')
             else:
-                message = "Most recent object is not a .mp3, so this function doesn't work"
+                logging.getLogger().info(f"Most recent object is not a mp3, so this function doesn't work")
                 data_object = None
     except (Exception, ValueError) as ex:
         logging.getLogger().error(str(ex))
-
-    if not data_object:
-        resp = "Wasn't able to extract object properly"
-    else:
-        text_message = create_oci_speech_job(data_object, data_namespace)
-        resp = text_message
+    try:
+        if data_object == None:
+            logging.getLogger().info(f"Wasn't able to extract object properly")
+        else:
+            text_message = create_oci_speech_job(data_object, data_namespace)
+            resp = text_message
+    except (Exception, ValueError) as ex:
+        logging.getLogger().error(str(ex))
 
     return response.Response(
         ctx,

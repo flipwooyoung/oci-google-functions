@@ -19,10 +19,10 @@ import oci.object_storage
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 #Change this to your bucket name
-BUCKET_NAME = "your_bucket_name"
+BUCKET_NAME = "oci_speech_output_bucket"
 
 # The ID of your sheet. Go to the git repo to see how to get your document ID. Only change the SAMPLE_RANGE_NAME if you want to change the column affected.
-SAMPLE_SPREADSHEET_ID = "your_spreadsheet_id"
+SAMPLE_SPREADSHEET_ID = r"1-6l-5nAjUhwbOY8JwiOL1H724GKpFel0_81SweCUHUI"
 
 #Only change the SAMPLE_RANGE_NAME if you want to change the column affected. Make sure to put {sheet_name}!A1 without the {}, iF your sheet name isn't Sheet1
 SAMPLE_RANGE_NAME = "Sheet1!A1"
@@ -31,35 +31,43 @@ SAMPLE_RANGE_NAME = "Sheet1!A1"
 SERVICE_ACCOUNT_PATH = "service_account.json"
 
 def handler(ctx, data: io.BytesIO=None):
+    data_bytes = data.getvalue()
+    data_str = data_bytes.decode('utf-8')
+    resp   = ""
+    
     try:
         data_bytes = data.getvalue()
         data_str = data_bytes.decode('utf-8')
         data_object = None
         
-        if data_str == "":
+        if data_str == "": #This method is mainly used when invoking without OCI Events
+            logging.getLogger().info(f'Function invoked with OCI Events, getting latest object from {BUCKET_NAME}')
             data_object = list_latest_object(BUCKET_NAME)
         else:
             data_json = json.loads(data.getvalue())
             logging.getLogger().info(json.dumps(data_json))
             data_namespace = data_json["data"]["additionalDetails"]["namespace"]
-            data_nsrc_bucket = data_json["data"]["additionalDetails"]["bucketName"]
+            data_source_bucket = data_json["data"]["additionalDetails"]["bucketName"]
             data_object = data_json["data"]["resourceName"]
+            logging.getLogger().info(f'Copying {data_object} from {data_source_bucket} to Google Sheets')
             
-            if data_object.lower().endswith(".json"):
-                return
+            if str(data_object).lower().endswith(".json"):
+                logging.getLogger().info(f'JSON validation works')
             else:
-                message = "Most recent object is not a json, so this function doesn't work"
+                logging.getLogger().info(f"Most recent object is not a json, so this function doesn't work")
                 data_object = None
     except (Exception, ValueError) as ex:
         logging.getLogger().error(str(ex))
 
-    if not data_object:
-        resp = "Wasn't able to extract object properly"
-    else:
-        text_message = get_object_content(BUCKET_NAME, data_object)
-        google_sheets_append_json(text_message)
-        resp = text_message
-
+    try:
+        if data_object == None:
+            logging.getLogger().info(f"Wasn't able to extract object properly")
+        else:
+            logging.getLogger().info(f"Extracting contents of object {data_object}")
+            text_message = get_object_content(BUCKET_NAME, data_object)
+            resp = google_sheets_append_json(text_message)
+    except (Exception, ValueError) as ex:
+        logging.getLogger().error(str(ex))
 
     return response.Response(
         ctx,
@@ -116,7 +124,7 @@ def list_latest_object(bucketName):  # This function extracts the name of the la
     response = str(found_object.name)
     return response
 
-def google_sheets_append_json(json_data):
+def google_sheets_append_json(text_message):
     try:
         # Load the service account key from the service_account.json
         credentials_info = json.load(open(SERVICE_ACCOUNT_PATH))
@@ -125,8 +133,8 @@ def google_sheets_append_json(json_data):
         service = build('sheets', 'v4', credentials=scoped_credentials)
 
         #JSON Configuration (OPTIONAL). Put your own code configuration for the json here. Set the variable you are extracting from the json as json_extract
-        json_extract = json_data #Comment this line out if you are adding your own JSON configuration.
-
+        json_data = json.loads(text_message)
+        json_extract = json_data
         #This is a sample code that pushes a transcription key value as the json_extract
         #for item in json_data['transcriptions']:
             #json_extract = item.get('transcription')
@@ -140,8 +148,8 @@ def google_sheets_append_json(json_data):
         #json_extract = horizontal_list
         
         #This is another sample code that pushes a transcription key value as the json_extract
-        #if "transcriptions" in json_data and isinstance(json_data["transcriptions"], list) and len(json_data["transcriptions"]) > 0 and "transcription" in json_data["transcriptions"][0]:
-            #json_extract = json_data["transcriptions"][0]["transcription"]
+        if "transcriptions" in json_data and isinstance(json_data["transcriptions"], list) and len(json_data["transcriptions"]) > 0 and "transcription" in json_data["transcriptions"][0]:
+            json_extract = json_data["transcriptions"][0]["transcription"]
         #-----------------END OF JSON CONFIGURATION-----------------
     
 
